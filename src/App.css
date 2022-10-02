@@ -252,6 +252,7 @@ form {
   height: 60px;
   background-color: #FAFAFA;
   border-bottom: 1px solid lightgray;
+  z-index: 1;
 }
 
 .closeHelp {
