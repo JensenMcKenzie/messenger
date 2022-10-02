@@ -7,7 +7,7 @@ function App() {
   const [user] = useAuthState(auth);
   return (
     <>
-      {user ? <Chat /> : <SignIn />}
+      {user ? <Chat/> : <SignIn/>}
     </>
   );
 }

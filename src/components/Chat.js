@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import { db, auth } from '../firebase'
 import Logout from './Logout'
-import {collection, onSnapshot, orderBy, query, limit} from 'firebase/firestore';
-import SendMessage from './SendMessage';
+import {collection, onSnapshot, orderBy, query, limit} from 'firebase/firestore'
+import SendMessage from './SendMessage'
+import Help from './Help'
+
 function Chat() {
     const [messages, setMessages] = useState([])
-
+    const bottom = useRef()
     useEffect(() => {
         //Whenever something changes inside the messages collection
         const dataCol = collection(db, 'messages');
@@ -16,6 +18,7 @@ function Chat() {
                 id: doc.id,
             }));
             setMessages(data);
+            bottom.current.scrollIntoView({behavior: 'smooth'})
         });
     }, []);
     
@@ -26,19 +29,39 @@ function Chat() {
         }
     }
 
+    function editMessage(e, m){
+        if (auth.currentUser.uid === m.uid){
+            if (e.target.innerHTML === m.text){
+                return
+            }
+            if (e.target.innerHTML.trim() === ''){
+                e.target.innerHTML = m.text;
+                return
+            }
+            db.collection('messages').doc(m.id).update({
+                userName: auth.currentUser.displayName + " (edited)",
+                text: e.target.textContent
+            })
+        }
+    }
+
     return (
     <div>
-        <Logout/>
+        <div className="topBar">
+            <Help/>
+            <Logout/>
+        </div>
         <div className="msgs">
         {messages.map((m) => (
             <div key={m.id} className={`msg ${m.uid === auth.currentUser.uid ? 'sent' : 'received'}`}>
                     <button onClick={() => {deleteMessage(m)}} className='delete'>x</button>
-                    <p>{m.userName}</p>
-                    <p>{m.text}</p>
+                    <p className='username'>{m.userName}</p>
+                    <p contentEditable={m.uid === auth.currentUser.uid ? "true" : "false"} onBlur={(e) => editMessage(e,m)}>{m.text}</p>
             </div>
         ))}
         </div>
-        <SendMessage/>
+        <SendMessage scroll={bottom}/>
+        <div ref={bottom}/>
     </div>
   )
 }

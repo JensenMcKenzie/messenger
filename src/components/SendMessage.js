@@ -6,7 +6,7 @@ function SendMessage() {
     const [wobble, setWobble] = useState(0);
     async function sendMessage(e){
         e.preventDefault();
-        if (msg === ''){
+        if (msg.trim() === ''){
             setWobble(1);
             return;
         }

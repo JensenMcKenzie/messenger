@@ -4,7 +4,7 @@ import {auth} from '../firebase.js';
 function Logout() {
   return (
     <div>
-        <button onClick={() => auth.signOut()}>Logout</button>
+        <button className='logout' onClick={() => auth.signOut()}>Logout</button>
     </div>
   )
 }

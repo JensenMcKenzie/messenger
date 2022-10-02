@@ -7,8 +7,9 @@ function SignIn() {
         auth.signInWithPopup(provider);
     }
   return (
-    <div>
-        <button onClick={googleSignIn}>Sign In With Google</button>
+    <div className='signInContainer'>
+        <label className='introText'>Welcome to the messenger app. Built in React with Firebase</label>
+        <button className="signin" onClick={googleSignIn}>Sign In With Google</button>
     </div>
   )
 }
